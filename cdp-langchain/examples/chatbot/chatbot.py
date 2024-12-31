@@ -11,6 +11,9 @@ from langgraph.prebuilt import create_react_agent
 from cdp_langchain.agent_toolkits import CdpToolkit
 from cdp_langchain.utils import CdpAgentkitWrapper
 
+# Import toolkit
+from cdp_langchain.agent_toolkits import toolkit
+
 # Configure a file to persist the agent's CDP MPC Wallet Data.
 wallet_data_file = "wallet_data.txt"
 
@@ -45,9 +48,21 @@ def initialize_agent():
     with open(wallet_data_file, "w") as f:
         f.write(wallet_data)
 
-    # Initialize CDP Agentkit Toolkit and get tools.
-    cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
-    tools = cdp_toolkit.get_tools()
+    # Initialize toolkit and get tools
+    toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
+    tools = toolkit.get_tools()
+
+    # Create agent_executor using create_react_agent
+    agent_executor = create_react_agent(llm, tools)
+
+    # Example usage to send 0.005 ETH to john2879.base.eth
+    events = agent_executor.stream(
+        {"messages": [("user", "Send 0.005 ETH to john2879.base.eth")]},
+        stream_mode="values"
+    )
+
+    for event in events:
+        event["messages"][-1].pretty_print()
 
     # Store buffered conversation history in memory.
     memory = MemorySaver()
