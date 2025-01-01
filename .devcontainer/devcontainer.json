@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "test": "poetry install --with dev && poetry run make test",
+    "build": "poetry install",
+    "launch": "cd cdp-agentkit-core && poetry install --with dev && cd .. && cd cdp-langchain && poetry install --with dev && cd .. && cd twitter-langchain && poetry install --with dev"
+  }
+}
