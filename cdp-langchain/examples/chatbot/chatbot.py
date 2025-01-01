@@ -1,6 +1,7 @@
 import os
 import sys
 import time
+import getpass
 
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
@@ -13,6 +14,17 @@ from cdp_langchain.utils import CdpAgentkitWrapper
 
 # Configure a file to persist the agent's CDP MPC Wallet Data.
 wallet_data_file = "wallet_data.txt"
+
+# Set environment variables
+for env_var in [
+    "CDP_API_KEY_NAME",
+    "CDP_API_KEY_PRIVATE_KEY",
+]:
+    if not os.getenv(env_var):
+        os.environ[env_var] = getpass.getpass(f"Enter your {env_var}: ")
+
+# Optional: Set network (defaults to base-sepolia)
+os.environ["NETWORK_ID"] = "base-sepolia"  # or "base-mainnet"
 
 
 def initialize_agent():
