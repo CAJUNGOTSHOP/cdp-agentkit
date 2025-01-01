@@ -67,6 +67,19 @@ def initialize_agent():
     ai_plugin_tool = AIPluginTool.from_plugin_url("https://www.klarna.com/.well-known/ai-plugin.json")
     tools.append(ai_plugin_tool)
 
+    # Initialize ChatOpenAI with temperature 0
+    llm = ChatOpenAI(temperature=0)
+
+    # Load tools using load_tools(["requests_all"]) and add AIPluginTool to the tools list
+    tools = load_tools(["requests_all"])
+    tools += [ai_plugin_tool]
+
+    # Initialize agent using initialize_agent with AgentType.ZERO_SHOT_REACT_DESCRIPTION and run the agent with the query
+    agent_chain = initialize_agent(
+        tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
+    )
+    agent_chain.run("what t shirts are available in klarna?")
+
     # Store buffered conversation history in memory.
     memory = MemorySaver()
     config = {"configurable": {"thread_id": "CDP Agentkit Chatbot Example!"}}
