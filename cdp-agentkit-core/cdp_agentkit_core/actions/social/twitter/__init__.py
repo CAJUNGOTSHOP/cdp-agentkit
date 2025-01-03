@@ -1,3 +1,6 @@
+# This file is not related to Coinbase API withdrawals.
+# It is focused on Twitter actions.
+
 from cdp_agentkit_core.actions.social.twitter.account_details import AccountDetailsAction
 from cdp_agentkit_core.actions.social.twitter.account_mentions import AccountMentionsAction
 from cdp_agentkit_core.actions.social.twitter.action import TwitterAction
