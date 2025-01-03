@@ -3,6 +3,7 @@ from json import dumps
 
 import tweepy
 from pydantic import BaseModel
+import logging
 
 from cdp_agentkit_core.actions.social.twitter.action import TwitterAction
 
@@ -32,17 +33,33 @@ def account_details(client: tweepy.Client) -> str:
     Returns:
         str: A message containing account details for the authenticated user context.
 
+    Example:
+        client = tweepy.Client(bearer_token="YOUR_BEARER_TOKEN")
+        result = account_details(client)
+        print(result)
+
     """
     message = ""
 
+    # Log the start of the function execution
+    logging.info("Starting account_details function")
+
     try:
+        # Attempt to retrieve the authenticated user's account details
         response = client.get_me()
         data = response['data']
         data['url'] = f"https://x.com/{data['username']}"
 
         message = f"""Successfully retrieved authenticated user account details:\n{dumps(response)}"""
+        # Log the successful retrieval of account details
+        logging.info("Successfully retrieved authenticated user account details")
     except tweepy.errors.TweepyException as e:
         message = f"Error retrieving authenticated user account details:\n{e}"
+        # Log the error encountered during the API call
+        logging.error(f"Error retrieving authenticated user account details: {e}")
+
+    # Log the end of the function execution
+    logging.info("Ending account_details function")
 
     return message
 
