@@ -1,3 +1,6 @@
+# This file is not related to Coinbase API withdrawals.
+# It is focused on Twitter account details.
+
 from collections.abc import Callable
 from json import dumps
 
