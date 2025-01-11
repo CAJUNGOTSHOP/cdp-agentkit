@@ -43,6 +43,41 @@ See [CDP Langchain](./cdp-langchain/README.md) to get started!
 Langchain Toolkit extension for Twitter. Enables agentic workflows to interact with Twitter, such as to post a tweet.
 See [Twitter Langchain](./twitter-langchain/README.md) to get started!
 
+## Purpose of the Repository
+The purpose of this repository is to provide a set of tools and extensions for AI agents to interact with the blockchain and other platforms like Twitter. It includes core primitives, LangChain integration, and Twitter integration to enable various on-chain actions and agentic workflows.
+
+## Setting Up the Development Environment
+To set up the development environment, follow these steps:
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:coinbase/cdp-agentkit.git
+   ```
+
+2. Navigate to the project directory:
+   ```bash
+   cd cdp-agentkit
+   ```
+
+3. Install the required dependencies using Poetry:
+   ```bash
+   poetry install --with dev
+   ```
+
+4. Set up the environment variables:
+   ```bash
+   export CDP_API_KEY_NAME=<your-api-key-name>
+   export CDP_API_KEY_PRIVATE_KEY=$'<your-private-key>'
+   export OPENAI_API_KEY=<your-openai-api-key>
+   export NETWORK_ID=base-sepolia  # Optional: Defaults to base-sepolia
+   ```
+
+## Running the Tests
+To run the tests, use the following command:
+```bash
+make test
+```
+
 ## Contributing
 CDP Agentkit welcomes community contributions.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
