@@ -7,6 +7,8 @@ from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.prebuilt import create_react_agent
+from langchain.agents import AgentType, initialize_agent, load_tools
+from langchain_community.tools import AIPluginTool
 
 # Import CDP Agentkit Langchain Extension.
 from cdp_langchain.agent_toolkits import CdpToolkit
@@ -60,6 +62,23 @@ def initialize_agent():
     # Initialize CDP Agentkit Toolkit and get tools.
     cdp_toolkit = CdpToolkit.from_cdp_agentkit_wrapper(agentkit)
     tools = cdp_toolkit.get_tools()
+
+    # Initialize AIPluginTool with the URL
+    ai_plugin_tool = AIPluginTool.from_plugin_url("https://www.klarna.com/.well-known/ai-plugin.json")
+    tools.append(ai_plugin_tool)
+
+    # Initialize ChatOpenAI with temperature 0
+    llm = ChatOpenAI(temperature=0)
+
+    # Load tools using load_tools(["requests_all"]) and add AIPluginTool to the tools list
+    tools = load_tools(["requests_all"])
+    tools += [ai_plugin_tool]
+
+    # Initialize agent using initialize_agent with AgentType.ZERO_SHOT_REACT_DESCRIPTION and run the agent with the query
+    agent_chain = initialize_agent(
+        tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
+    )
+    agent_chain.run("what t shirts are available in klarna?")
 
     # Store buffered conversation history in memory.
     memory = MemorySaver()

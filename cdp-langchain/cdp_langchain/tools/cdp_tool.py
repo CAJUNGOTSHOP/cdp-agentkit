@@ -15,6 +15,7 @@ from langchain_core.tools import BaseTool
 from pydantic import BaseModel
 
 from cdp_langchain.utils.cdp_agentkit_wrapper import CdpAgentkitWrapper
+from langchain_community.tools import AIPluginTool
 
 
 class CdpTool(BaseTool):  # type: ignore[override]
@@ -42,3 +43,28 @@ class CdpTool(BaseTool):  # type: ignore[override]
         else:
             parsed_input_args = {"instructions": instructions}
         return self.cdp_agentkit_wrapper.run_action(self.func, **parsed_input_args)
+
+
+class AIPluginTool(BaseTool):  # type: ignore[override]
+    """Tool for interacting with AI Plugins."""
+
+    name: str = ""
+    description: str = ""
+    args_schema: type[BaseModel] | None = None
+    func: Callable[..., str]
+
+    def _run(
+        self,
+        instructions: str | None = "",
+        run_manager: CallbackManagerForToolRun | None = None,
+        **kwargs: Any,
+    ) -> str:
+        """Use the AI Plugin to run an operation."""
+        if not instructions or instructions == "{}":
+            instructions = ""
+        if self.args_schema is not None:
+            validated_input_data = self.args_schema(**kwargs)
+            parsed_input_args = validated_input_data.model_dump()
+        else:
+            parsed_input_args = {"instructions": instructions}
+        return self.func(**parsed_input_args)
